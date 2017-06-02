@@ -1,0 +1,16 @@
+{
+  "name": "pi_server",
+  "version": "1.0.0",
+  "description": "server for robot bartender ",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "Danzibob",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  }
+}
