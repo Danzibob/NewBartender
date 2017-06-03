@@ -1,9 +1,9 @@
 var express = require('express')
 var bodyParser = require("body-parser")
-var drinksData = require("./drinks.js")
+const drinksData = require("./drinks.js")
 
+const drinks = Object.getOwnPropertyNames(drinksData.Cocktails)
 var busy = false
-var drinks = ["Screwdriver","Sex On The Beach","Mojito"]
 var current_rec_pos = 0
 var response = {}
 

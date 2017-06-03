@@ -1,0 +1,17 @@
+{
+  "name": "pi_server",
+  "version": "1.0.0",
+  "description": "server for robot bartender ",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "Danzibob",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/pubsub": "^0.12.0",
+    "actions-on-google": "^1.1.1",
+    "request": "^2.81.0"
+  }
+}
