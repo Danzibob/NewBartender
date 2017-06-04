@@ -5,7 +5,8 @@ from threading import Thread, Event
 import threading
 from queue import Queue
 import assistant_helpers, auth_helpers, audio_helpers, common_settings
-from google.assistant.embedded.v1alpha1 import embedded_assistant_pb2
+#from google-assistant-sdk-python import embedded_assistant_pb2
+from assistant-sdk-python.google-assistant-grpc.google.assistant.embedded.v1alpha1 import embedded_assistant_pb2.py
 from google.rpc import code_pb2
 from google.cloud import pubsub
 
