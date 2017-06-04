@@ -5,7 +5,7 @@ from threading import Thread, Event
 import threading
 from queue import Queue
 import assistant_helpers, auth_helpers, audio_helpers, common_settings
-#from google.assistant.embedded.v1alpha1 import embedded_assistant_pb2
+from google.assistant.embedded.v1alpha1 import embedded_assistant_pb2
 from google.rpc import code_pb2
 from google.cloud import pubsub
 
@@ -249,6 +249,19 @@ class AssistantThread(Thread):
 		conversation_stream.close()
 
 
+def signal_handler(signal, frame):
+	""" Ctrl+C handler to cleanup """
+
+	if PUSH_TO_TALK:
+	  GPIO.cleanup()
+
+	for t in threading.enumerate():
+	  # print(t.name)
+	  if t.name != 'MainThread':
+		t.shutdown_flag.set()
+
+	print('Goodbye!')
+	sys.exit(1)
 
 
 if __name__ == '__main__':
