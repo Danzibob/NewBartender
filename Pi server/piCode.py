@@ -4,7 +4,7 @@ from six.moves import input
 from threading import Thread, Event
 import threading
 from queue import Queue
-from . import (assistant_helpers, auth_helpers, audio_helpers, common_settings)
+import assistant_helpers, auth_helpers, audio_helpers, common_settings
 from google.assistant.embedded.v1alpha1 import embedded_assistant_pb2
 from google.rpc import code_pb2
 from google.cloud import pubsub
