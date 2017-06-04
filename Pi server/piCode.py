@@ -73,16 +73,16 @@ class SubscriptionThread(Thread):
 				print('pub/sub: ' + action)
 				# perform action based on JSON request
 				if action == 'make_drink':
-					msg = []
-					for ingredient in json_obj['ingredients']:
-						bottle = BOTTLES.index(ingredient)
-						amount = json_obj['ingredients'][ingredient]
-						msg.append("{},{}".format(bottle,amount))
-					self.msg_queue.put(";".join(msg)+"!")
+					make_drink(json_obj)
+          print("Making drink")
 					#Do some other flashy thing
 				elif action == 'flash_unavailable':
+          print("flash_unavailable")
+          self.msg_queue.put('xu!') #Hotword
 					#Do the flashy thing
 				elif action == 'flash_busy':
+          print("flash_busy")
+          self.msg_queue.put('xu!') #Hotword
 					#Do the flashy thing
 			# ack received message
 			if results:
