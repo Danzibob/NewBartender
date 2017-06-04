@@ -100,13 +100,11 @@ class SerialThread(Thread):
 		self.serial = serial.Serial(SER_DEVICE, 9600)
 
 	def run(self):
-
 		while not self.shutdown_flag.is_set():
-
 			if not self.msg_queue.empty():
-			cmd = self.msg_queue.get()
-			self.serial.write(str.encode(cmd))
-			print('Serial sending ' + cmd)
+				cmd = self.msg_queue.get()
+				self.serial.write(str.encode(cmd))
+				print('Serial sending ' + cmd)
 
 
 def setup_assistant():
