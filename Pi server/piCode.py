@@ -1,4 +1,4 @@
-import logging,time,signal,sys,json,serial,math,random,os
+import logging,time,signal,sys,json,serial,math,random,os,click
 import RPi.GPIO as GPIO
 from six.moves import input
 from threading import Thread, Event
