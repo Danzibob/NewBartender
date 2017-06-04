@@ -94,43 +94,42 @@ class SubscriptionThread(Thread):
 class SerialThread(Thread):
 
 	def __init__(self, msg_queue):
-	Thread.__init__(self)
-	self.shutdown_flag = Event()
-	self.msg_queue = msg_queue;
-	self.serial = serial.Serial(SER_DEVICE, 9600)
+		Thread.__init__(self)
+		self.shutdown_flag = Event()
+		self.msg_queue = msg_queue;
+		self.serial = serial.Serial(SER_DEVICE, 9600)
 
 	def run(self):
 
-	while not self.shutdown_flag.is_set():
+		while not self.shutdown_flag.is_set():
 
-		if not self.msg_queue.empty():
-		cmd = self.msg_queue.get()
-		self.serial.write(str.encode(cmd))
-		print('Serial sending ' + cmd)
+			if not self.msg_queue.empty():
+			cmd = self.msg_queue.get()
+			self.serial.write(str.encode(cmd))
+			print('Serial sending ' + cmd)
 
 
 def setup_assistant():
+	# Load credentials.
+	try:
+		credentials = os.path.join(
+				click.get_app_dir(common_settings.ASSISTANT_APP_NAME),
+				common_settings.ASSISTANT_CREDENTIALS_FILENAME
+		)
+		global creds
+		creds = auth_helpers.load_credentials(credentials, scopes=[common_settings.ASSISTANT_OAUTH_SCOPE, common_settings.PUBSUB_OAUTH_SCOPE])
+	except Exception as e:
+		logging.error('Error loading credentials: %s', e)
+		logging.error('Run auth_helpers to initialize new OAuth2 credentials.')
+		return -1
 
-		# Load credentials.
-		try:
-			credentials = os.path.join(
-					click.get_app_dir(common_settings.ASSISTANT_APP_NAME),
-					common_settings.ASSISTANT_CREDENTIALS_FILENAME
-			)
-			global creds
-			creds = auth_helpers.load_credentials(credentials, scopes=[common_settings.ASSISTANT_OAUTH_SCOPE, common_settings.PUBSUB_OAUTH_SCOPE])
-		except Exception as e:
-			logging.error('Error loading credentials: %s', e)
-			logging.error('Run auth_helpers to initialize new OAuth2 credentials.')
-			return -1
+	# Create gRPC channel
+	grpc_channel = auth_helpers.create_grpc_channel(ASSISTANT_API_ENDPOINT, creds)
+	logging.info('Connecting to %s', ASSISTANT_API_ENDPOINT)
 
-		# Create gRPC channel
-		grpc_channel = auth_helpers.create_grpc_channel(ASSISTANT_API_ENDPOINT, creds)
-		logging.info('Connecting to %s', ASSISTANT_API_ENDPOINT)
-
-		# Create Google Assistant API gRPC client.
-		global assistant
-		assistant = embedded_assistant_pb2.EmbeddedAssistantStub(grpc_channel)
+	# Create Google Assistant API gRPC client.
+	global assistant
+	assistant = embedded_assistant_pb2.EmbeddedAssistantStub(grpc_channel)
 		return 0
  
 class AssistantThread(Thread):
