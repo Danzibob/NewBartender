@@ -128,7 +128,7 @@ def setup_assistant():
 	# Create Google Assistant API gRPC client.
 	global assistant
 	assistant = embedded_assistant_pb2.EmbeddedAssistantStub(grpc_channel)
-		return 0
+	return 0
  
 class AssistantThread(Thread):
 
