@@ -256,9 +256,9 @@ def signal_handler(signal, frame):
 	  GPIO.cleanup()
 
 	for t in threading.enumerate():
-	  # print(t.name)
-	  if t.name != 'MainThread':
-		t.shutdown_flag.set()
+	  	# print(t.name)
+		if t.name != 'MainThread':
+			t.shutdown_flag.set()
 
 	print('Goodbye!')
 	sys.exit(1)
