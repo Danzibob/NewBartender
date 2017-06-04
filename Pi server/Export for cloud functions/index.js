@@ -8,7 +8,7 @@ const topicName = 'MMM';
 const drinksData = {"Ingredients":["Strawberry Daiquiri Mix","Passion Fruit Martini Mix","Vodka","White Rum","Tequila","Orange Juice","Blue Curacao"],"Cocktails":{"Hole In One":{"ingredients":{"Vodka":1.5,"Cranberry Juice":3,"Orange Juice":0.125},"glass":"Large Martini"},"Grand Cosmo":{"ingredients":{"Vodka":1.5,"Grand Marnier":1,"Lime Juice":"a splash","Cranberry Juice":2},"glass":"Large Martini"},"Ghost Goblet":{"ingredients":{"Cranberry Juice":8,"Vodka":4,"Cointreau":2},"glass":"Large Martini"},"Tequila Sunrise":{"ingredients":{"Orange Juice":4,"Tequila":2,"Grenadine":0.5},"glass":"Highball"},"Bocce Ball":{"ingredients":{"Orange Juice":4,"Vodka":2,"Disaronno":1},"glass":"Highball"},"Ollie":{"ingredients":{"White Rum":1,"Vodka":2,"Tequila":1,"Lemonade":-1},"glass":"Highball","instructions":"Drink like a tequila slammer, holding a slice of lemon between your thumb and forefinger of one hand, a pinch of salt resting on the back of the same hand. Lick up the salt, down the drink in one and then bite the slice of lemon."},"Romeo":{"ingredients":{"White Rum":1.25,"Cointreau":1,"Lemon Juice":"a generous splash","Strawberry Puree":3},"glass":"14oz Bulb"},"Orange Crush":{"ingredients":{"Vodka":2,"Orange Liqueur":1,"Orange Juice":3},"glass":"Collins","instructions":"Don't forget to garnish with orange!"},"Black Cat":{"ingredients":{"Tequila":1.25,"Disaronno":1.25},"glass":"Lowball"},"Soylent Green":{"ingredients":{"Vodka":1.5,"Blue Curacao":1,"Orange Juice":4},"glass":"Collins"},"Tropical Itch":{"ingredients":{"Vodka":1,"Grand Marnier":0.5,"White Rum":1,"Passion Fruit Juice":3},"glass":"Collins"},"Screwdriver":{"ingredients":{"Vodka":1.5,"Orange Juice":4},"glass":"Lowball"},"Kamikaze":{"ingredients":{"Vodka":0.5,"Triple Sec":0.25,"Lime Juice":0.25},"glass":"Shot"},"Godmother":{"ingredients":{"Vodka":1.5,"Disaronno":0.5},"glass":"Lowball"}},"Substitutions":{"Grand Marnier":"Blue Curacao","Cointreau":"Blue Curacao","Grenadine":"Blue Curacao","Strawberry Puree":"Strawberry Daiquiri Mix","Orange Liqueur":"Blue Curacao","Passion Fruit Juice":"Passion Fruit Martini Mix","Triple Sec":"Blue Curacao"}}
 const drinks = Object.getOwnPropertyNames(drinksData.Cocktails)
 var shuffled_drinks = drinks
-var extras = ["Lime Juice","Lemon Juice","Lemonade","Sugar"]
+var extras = ["Lime Juice","Lemon Juice","Lemonade"]
 
 var busy = false
 var current_rec_pos = 0
@@ -150,7 +150,21 @@ function nextRec(res){
   if(current_rec_pos >= drinks.length){
     response["speech"] = "Sorry, that's all the drinks I know how to make"
   } else {
-    response["speech"] = ivegota() + shuffled_drinks[current_rec_pos]
+    var drink = shuffled_drinks[current_rec_pos]
+    var recipe = drinksData.Cocktails[drinkName].ingredients
+    var plain_needed = Object.getOwnPropertyNames(recipe)
+    var subbed_needed = plain_needed.map(function(val){
+      if(drinksData.Substitutions[val] == undefined){
+        return val
+      } else {
+        return drinksData.Substitutions[val]
+      }
+    })
+    var dontHave = subbed_needed.filter(function(x){return drinksData.Ingredients.indexOf(x) == -1 && extras.indexOf(x) == -1})
+    if(dontHave.length > 0){
+      nextRec(res)
+    }
+    response["speech"] = ivegota() + 
     response["contextOut"] = [{
       "name":"recommended",
       "lifespan":4,
